@@ -29,7 +29,8 @@ module Aws
         new(
           context.config.credentials,
           context.config.sigv4_name,
-          context.config.sigv4_region
+          context.config.sigv4_region,
+          context.config.whitelist_headers
         ).sign(context.http_request)
       end
 
@@ -44,11 +45,7 @@ module Aws
         @service_name = service_name
         @credentials = credentials.credentials
         @region = EndpointProvider.signing_region(region, service_name)
-        if whitelist_headers.any? && (BLACKLIST_HEADERS & whitelist_headers).any?
-          @blacklist = BLACKLIST_HEADERS - whitelist_headers
-        else
-          @blacklist = BLACKLIST_HEADERS
-        end
+        @blacklist = BLACKLIST_HEADERS - whitelist_headers
       end
 
       # @param [Seahorse::Client::Http::Request] req

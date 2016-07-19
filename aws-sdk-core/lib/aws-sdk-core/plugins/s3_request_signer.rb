@@ -125,7 +125,9 @@ module Aws
           context.http_request.headers.delete('authorization')
           context.http_request.headers.delete('x-amz-security-token')
           context.http_request.endpoint.host = new_hostname(context, region)
-          signer = Signers::V4.new(context.config.credentials, 's3', region)
+          signer = Signers::V4.new(
+            context.config.credentials, 's3', region, context.config.whitelist_headers
+          )
           signer.sign(context.http_request)
         end
 

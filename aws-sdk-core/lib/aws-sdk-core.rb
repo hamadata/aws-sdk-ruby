@@ -171,6 +171,7 @@ module Aws
     autoload :ParamValidator, 'aws-sdk-core/plugins/param_validator'
     autoload :RegionalEndpoint, 'aws-sdk-core/plugins/regional_endpoint'
     autoload :ResponsePaging, 'aws-sdk-core/plugins/response_paging'
+    autoload :WhitelistHeaders, 'aws-sdk-core/plugins/sigv4_whitelist_headers'
     autoload :RequestSigner, 'aws-sdk-core/plugins/request_signer'
     autoload :RetryErrors, 'aws-sdk-core/plugins/retry_errors'
     autoload :Route53IdFix, 'aws-sdk-core/plugins/route_53_id_fix'

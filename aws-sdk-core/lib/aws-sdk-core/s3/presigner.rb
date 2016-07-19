@@ -97,7 +97,7 @@ module Aws
           end
           signer = Signers::V4.new(
             context.config.credentials, 's3',
-            context.config.region
+            context.config.region, context.config.whitelist_headers
           )
           url = signer.presigned_url(
             context.http_request,

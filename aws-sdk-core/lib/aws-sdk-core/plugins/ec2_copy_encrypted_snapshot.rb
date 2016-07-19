@@ -74,7 +74,10 @@ module Aws
         end
 
         def presigned_url(http_request, config)
-          signer = Signers::V4.new(config.credentials, 'ec2', config.region)
+          signer = Signers::V4.new(
+            config.credentials, 'ec2',
+            config.region, config.whitelist_headers
+          )
           signer.presigned_url(http_request, expires_in: 3600)
         end
 
