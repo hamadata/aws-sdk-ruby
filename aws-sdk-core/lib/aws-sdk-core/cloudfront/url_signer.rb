@@ -98,26 +98,31 @@ module Aws
         end
       end
 
-      # create signed values that used to construct signed URLs
+      # create signed values that used to construct signed URLs or Set-Cookie parameters
       # @option param [String] :resource
       # @option param [Integer<timestamp>] :expires
       # @option param [String<JSON>] :policy
-      def signature(params = {})
-        signature_content = []
+      def signature(params = {}, format=:url)
+        signature_content = {}
         if params[:policy]
           policy = params[:policy].gsub('/\s/s', '')
-          signature_content << "Policy=#{encode(policy)}"
+          signature_content['Policy'] = encode(policy)
         elsif params[:resource] && params[:expires]
           policy = canned_policy(params[:resource], params[:expires])
-          signature_content << "Expires=#{params[:expires]}"
+          signature_content['Expires'] = params[:expires]
         else
           msg = "Either a policy or a resource with an expiration time must be provided."
           raise ArgumentError, msg
         end
 
-        signature_content << "Signature=#{encode(sign_policy(policy))}"
-        signature_content << "Key-Pair-Id=#{@key_pair_id}"
-        signature_content.join('&').gsub("\n", '')
+        signature_content['Signature'] = encode(sign_policy(policy))
+        signature_content['Key-Pair-Id'] = @key_pair_id
+
+        if format == :url
+          signature_content.map{ |k, v| "#{k}=#{v}" }.join('&').gsub("\n", '')
+        else
+          signature_content
+        end
       end
 
       # create the signature string with policy signed
